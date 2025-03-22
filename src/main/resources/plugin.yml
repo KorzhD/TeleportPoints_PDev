@@ -1,0 +1,12 @@
+name: DK-TeleportPoints-Plugin
+version: '${project.version}'
+main: dmytrok.dkteleportpointsplugin.DK_TeleportPoints_Plugin
+commands:
+  settppoint:
+    description: create Teleport Armor Stand
+    usage: /settppoint
+    permission: tppoint.admin
+permissions:
+  tppoint.admin:
+    description: Only admin can do it
+    default: op
