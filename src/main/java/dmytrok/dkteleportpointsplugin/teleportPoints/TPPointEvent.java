@@ -1,5 +1,6 @@
 package dmytrok.dkteleportpointsplugin.teleportPoints;
 
+import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,25 +14,25 @@ public class TPPointEvent implements Listener {
 
     @EventHandler
     public void onPlayerInteractWithArmorStand(PlayerInteractAtEntityEvent event) {
-        if(event.getPlayer() == null) {
+        if (event.getPlayer() == null) {
             return;
         }
         Player player = event.getPlayer();
-        if(event.getRightClicked() == null) {
+        if (event.getRightClicked() == null) {
             player.sendMessage("1NULL");
             return;
         }
-        if(!(event.getRightClicked() instanceof ArmorStand)) {
+        if (!(event.getRightClicked() instanceof ArmorStand)) {
             player.sendMessage("NOT A AS");
             return;
         }
         ArmorStand armorStand = (ArmorStand) event.getRightClicked();
 
-        if(armorStand.getCustomName() == null) {
+        if (armorStand.getCustomName() == null) {
             player.sendMessage("2NULL");
             return;
         }
-        if(!armorStand.hasArms()) {
+        if (!armorStand.hasArms()) {
             player.sendMessage("NO ARMS");
             return;
         }
@@ -40,11 +41,11 @@ public class TPPointEvent implements Listener {
         double z = armorStand.getRightArmPose().getZ();
         player.sendMessage("X: " + Math.floor(x) + ", Y: " + Math.floor(y) + ", Z: " + Math.floor(z));
 
-        if(Math.floor(x) != 5 || Math.floor(y) != 2 || Math.floor(z) != 5) {
+        if (Math.floor(x) != 5 || Math.floor(y) != 2 || Math.floor(z) != 5) {
             player.sendMessage("NOT ANGLE");
             return;
         }
-        if(armorStand.getNearbyEntities(0.5, 1, 0.5) == null) {
+        if (armorStand.getNearbyEntities(0.5, 1, 0.5) == null) {
             player.sendMessage("3NULL");
             return;
         }
@@ -52,17 +53,17 @@ public class TPPointEvent implements Listener {
         entities.removeIf(entity -> !(entity instanceof ArmorStand));
 
         ArmorStand coordinates = null;
-        for(Entity entity : entities) {
-            if(entity == null || !(entity instanceof ArmorStand)) {
+        for (Entity entity : entities) {
+            if (entity == null || !(entity instanceof ArmorStand)) {
                 player.sendMessage("4NULL");
                 return;
             }
             ArmorStand stand = (ArmorStand) entity;
-            if(stand.getCustomName() == null) {
+            if (stand.getCustomName() == null) {
                 player.sendMessage("5NULL");
                 continue;
             }
-            if(!stand.hasArms()) {
+            if (!stand.hasArms()) {
                 player.sendMessage("NO ARMS");
                 continue;
             }
@@ -70,23 +71,30 @@ public class TPPointEvent implements Listener {
             double y1 = stand.getRightArmPose().getY();
             double z1 = stand.getRightArmPose().getZ();
             player.sendMessage("X: " + Math.floor(x1) + ", Y: " + Math.floor(y1) + ", Z: " + Math.floor(z1));
-            if(Math.floor(x1) != 2 || Math.floor(y1) != 4 || Math.floor(z1) != 2) {
+            if (Math.floor(x1) != 2 || Math.floor(y1) != 4 || Math.floor(z1) != 2) {
                 player.sendMessage("NOT ANGLE111");
                 continue;
             } else {
                 coordinates = stand;
             }
         }
-            if(coordinates == null) {
-                player.sendMessage("6NULL");
-                return;
-            }
+        if (coordinates == null) {
+            player.sendMessage("6NULL");
+            return;
+        }
 
-            String coordinatesName = coordinates.getCustomName();
-            player.sendMessage(coordinatesName);
+        String[] coordinatesName = coordinates.getCustomName().split("/");
+        for (int i = 0; i < coordinatesName.length; i++) {
+            player.sendMessage(coordinatesName[i]);
+        }
+        int x2 = Integer.parseInt(coordinatesName[0]);
+        int y2 = Integer.parseInt(coordinatesName[1]);
+        int z2 = Integer.parseInt(coordinatesName[2]);
+
+        Location tpLocation = new Location(player.getWorld(), x2, y2, z2);
+
+        player.teleport(tpLocation);
 
 
-
-            
     }
 }
