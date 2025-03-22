@@ -22,7 +22,7 @@ public class TPPointEntity {
         tpPoint.setVisible(false);
         tpPoint.setGravity(false);
         tpPoint.setInvulnerable(true);
-        tpPoint.setCustomName(fullName);
+        tpPoint.setCustomName("§l" + fullName);
         tpPoint.setCustomNameVisible(true);
         tpPoint.setArms(true);
         EulerAngle angle = new EulerAngle(56, 78, 24);
@@ -33,7 +33,6 @@ public class TPPointEntity {
         coordinates.setGravity(false);
         coordinates.setInvulnerable(true);
         String coordinatesName = x + "/" + y + "/" + z;
-        player.sendMessage("Coordinates: " + coordinatesName);
         coordinates.setCustomName(coordinatesName);
         coordinates.setCustomNameVisible(false);
         coordinates.setArms(true);
