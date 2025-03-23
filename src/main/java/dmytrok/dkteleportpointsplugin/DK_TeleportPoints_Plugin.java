@@ -23,6 +23,6 @@ public final class DK_TeleportPoints_Plugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("!---------------TeleportPoints Plugin disabled---------------!");
+        getLogger().info("\u001B[32m!---------------TeleportPoints Plugin disabled---------------!\u001B[0m");
     }
 }
