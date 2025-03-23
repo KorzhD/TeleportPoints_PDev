@@ -1,5 +1,6 @@
 package dmytrok.dkteleportpointsplugin;
 
+import dmytrok.dkteleportpointsplugin.standdeleter.ArmorStandDeleter;
 import dmytrok.dkteleportpointsplugin.teleportPoints.TPPointCommand;
 import dmytrok.dkteleportpointsplugin.teleportPoints.TPPointEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +12,7 @@ public final class DK_TeleportPoints_Plugin extends JavaPlugin {
         getLogger().info("\u001B[32m!---------------TeleportPoints Plugin enabled---------------!\u001B[0m");
 
         getServer().getPluginManager().registerEvents(new TPPointEvent(), this);
+        getServer().getPluginManager().registerEvents(new ArmorStandDeleter(), this);
 
 
         if (getCommand("settppoint") != null) {

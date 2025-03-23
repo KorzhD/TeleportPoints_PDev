@@ -1,30 +1,50 @@
-package dmytrok.dkteleportpointsplugin.teleportPoints;
+package dmytrok.dkteleportpointsplugin.standdeleter;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class TPPointEvent implements Listener {
-
+public class ArmorStandDeleter implements Listener {
     @EventHandler
-    public void onPlayerInteractWithArmorStand(PlayerInteractAtEntityEvent event) {
-        if (event.getPlayer() == null) {
+    public void onPlayerHitArmorStand(EntityDamageByEntityEvent event) {
+        if (event.getDamager() == null || !(event.getDamager() instanceof Player)) {
             return;
         }
-        Player player = event.getPlayer();
-        if (event.getRightClicked() == null) {
+        Player player = (Player) event.getDamager();
+        if(!player.hasPermission("op")) {
             return;
         }
-        if (!(event.getRightClicked() instanceof ArmorStand)) {
+
+        if (player.getInventory().getItemInMainHand() == null) {
             return;
         }
-        ArmorStand armorStand = (ArmorStand) event.getRightClicked();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!item.getType().equals(Material.STICK)) {
+            return;
+        }
+        if (!item.hasItemMeta()) {
+            return;
+        }
+        if (!item.getItemMeta().hasDisplayName()) {
+            return;
+        }
+        if (!item.getItemMeta().getDisplayName().equals("TP Point Deleter")) {
+            return;
+        }
+
+        if (event.getEntity() == null || !(event.getEntity() instanceof ArmorStand)) {
+            return;
+        }
+        ArmorStand armorStand = (ArmorStand) event.getEntity();
+
 
         if (armorStand.getCustomName() == null) {
             return;
@@ -70,15 +90,8 @@ public class TPPointEvent implements Listener {
             return;
         }
 
-        String[] coordinatesName = coordinates.getCustomName().split("/");
-        int x2 = Integer.parseInt(coordinatesName[0]);
-        int y2 = Integer.parseInt(coordinatesName[1]);
-        int z2 = Integer.parseInt(coordinatesName[2]);
-
-        Location tpLocation = new Location(player.getWorld(), x2, y2, z2);
-
-        player.teleport(tpLocation);
-
+        armorStand.remove();
+        coordinates.remove();
 
     }
 }

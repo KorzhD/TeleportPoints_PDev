@@ -9,7 +9,7 @@ import org.bukkit.util.EulerAngle;
 
 public class TPPointEntity {
 
-    public static void setTPPoint(String name, int x, int y, int z, Player player) {
+    public static void setTPPoint(String name, int x, int y, int z, String colorCode, Player player) {
 
         Location location = player.getLocation();
         World world = player.getWorld();
@@ -22,7 +22,7 @@ public class TPPointEntity {
         tpPoint.setVisible(false);
         tpPoint.setGravity(false);
         tpPoint.setInvulnerable(true);
-        tpPoint.setCustomName("§l" + fullName);
+        tpPoint.setCustomName(colorCode +"§l" + fullName);
         tpPoint.setCustomNameVisible(true);
         tpPoint.setArms(true);
         EulerAngle angle = new EulerAngle(56, 78, 24);

@@ -12,32 +12,32 @@ public class TPPointCommand implements CommandExecutor {
 
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("You must be a player");
-            return false;
+            return true;
         }
         Player player = (Player) commandSender;
 
-        if(!(player.hasPermission("tppoint.admin"))) {
+        if (!(player.hasPermission("tppoint.admin"))) {
             player.sendMessage("You must be an admin");
-            return false;
+            return true;
         }
         Location location = player.getLocation();
-        if(location == null || location.getWorld() == null) {
+        if (location == null || location.getWorld() == null) {
             player.sendMessage("Error: Tp Point can't be spawned in this place!");
-            return false;
+            return true;
         }
 
-        if(args == null || args.length < 3) {
-            player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z]");
-            return false;
+        if (args == null || args.length < 4) {
+            player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z] [color]");
+            return true;
         }
 
         for (int i = 1; i <= 3; i++) {
-            if(args[i] == null) {
-                return false;
+            if (args[i] == null) {
+                return true;
             }
-            if(!isNumeric(args[i], player)) {
-                player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z]");
-                return false;
+            if (!isNumeric(args[i], player)) {
+                player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z] [color]");
+                return true;
             }
         }
 
@@ -47,7 +47,66 @@ public class TPPointCommand implements CommandExecutor {
         int y = Integer.parseInt(args[2]);
         int z = Integer.parseInt(args[3]);
 
-        TPPointEntity.setTPPoint(name, x, y, z, player);
+        if(args[4] == null) {
+            player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z] [color]");
+            return true;
+        }
+
+        String color = args[4].toLowerCase();
+        String colorCode = "§0";
+        switch (color) {
+            case ("dark_red"):
+                colorCode = "§4";
+                break;
+            case ("red"):
+                colorCode = "§c";
+                break;
+            case ("gold"):
+                colorCode = "§6";
+                break;
+            case ("yellow"):
+                colorCode = "§e";
+                break;
+            case ("dark_green"):
+                colorCode = "§2";
+                break;
+            case ("green"):
+                colorCode = "§a";
+                break;
+            case ("aqua"):
+                colorCode = "§b";
+                break;
+            case ("dark_aqua"):
+                colorCode = "§3";
+                break;
+            case ("dark_blue"):
+                colorCode = "§1";
+                break;
+            case ("blue"):
+                colorCode = "§9";
+                break;
+            case ("light_purple"):
+                colorCode = "§d";
+                break;
+            case ("dark_purple"):
+                colorCode = "§5";
+                break;
+            case ("white"):
+                colorCode = "§f";
+                break;
+            case ("gray"):
+                colorCode = "§7";
+                break;
+            case ("dark_gray"):
+                colorCode = "§8";
+                break;
+            case ("black"):
+                colorCode = "§0";
+                break;
+        }
+
+
+        TPPointEntity.setTPPoint(name, x, y, z, colorCode, player);
         return true;
     }
 
@@ -56,7 +115,7 @@ public class TPPointCommand implements CommandExecutor {
             Integer.parseInt(s);
             return true;
         } catch (NumberFormatException e) {
-            player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z]");
+            player.sendMessage("§4/settppoint [teleport/point/name] [x] [y] [z] [color]");
             return false;
         }
 
