@@ -1,12 +1,19 @@
 package dmytrok.dkteleportpointsplugin.teleportPoints;
 
+import dmytrok.dkteleportpointsplugin.DK_TeleportPoints_Plugin;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -77,8 +84,32 @@ public class TPPointEvent implements Listener {
 
         Location tpLocation = new Location(player.getWorld(), x2, y2, z2);
 
-        player.teleport(tpLocation);
+        String color = armorStand.getCustomName().substring(0, 2);
 
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 1));
 
+        //door
+        if(color.equals("§a") || color.equals("§c")) {
+            player.playSound(player.getLocation(), "custom.door_custom", SoundCategory.MASTER, 1 ,1);
+            playSound(player, "custom.door_close_custom", tpLocation);
+        }
+        //gate
+        else if(color.equals("§2") || color.equals("§4")) {
+            player.playSound(player.getLocation(), "custom.gate_custom", SoundCategory.MASTER, 1 ,1);
+            playSound(player, "custom.gate_close_custom", tpLocation);
+
+        } else {
+            player.teleport(tpLocation);
+        }
+    }
+
+    private void playSound(Player player, String soundName, Location tpLocation) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.teleport(tpLocation);
+                player.playSound(player.getLocation(), soundName, SoundCategory.MASTER, 1, 1);
+            }
+        }.runTaskLater(DK_TeleportPoints_Plugin.getInstance(), 40);
     }
 }

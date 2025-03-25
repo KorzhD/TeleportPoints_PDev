@@ -7,8 +7,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DK_TeleportPoints_Plugin extends JavaPlugin {
 
+    private static DK_TeleportPoints_Plugin instance;
+
     @Override
     public void onEnable() {
+        instance = this;
         getLogger().info("\u001B[32m!---------------TeleportPoints Plugin enabled---------------!\u001B[0m");
 
         getServer().getPluginManager().registerEvents(new TPPointEvent(), this);
@@ -26,5 +29,9 @@ public final class DK_TeleportPoints_Plugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("\u001B[32m!---------------TeleportPoints Plugin disabled---------------!\u001B[0m");
+    }
+
+    public static DK_TeleportPoints_Plugin getInstance() {
+        return instance;
     }
 }
