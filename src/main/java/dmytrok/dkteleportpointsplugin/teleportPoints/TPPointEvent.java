@@ -87,6 +87,7 @@ public class TPPointEvent implements Listener {
         String color = armorStand.getCustomName().substring(0, 2);
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 100));
 
         //door
         if(color.equals("§a") || color.equals("§c")) {
