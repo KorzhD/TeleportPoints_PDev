@@ -9,15 +9,21 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TPPointEvent implements Listener {
+
+    private final Map<Player, Long> cooldowns = new HashMap<>();
+    private final long cooldownTime = 4000;
 
     @EventHandler
     public void onPlayerInteractWithArmorStand(PlayerInteractAtEntityEvent event) {
@@ -47,6 +53,9 @@ public class TPPointEvent implements Listener {
             return;
         }
         if (armorStand.getNearbyEntities(0.5, 1, 0.5) == null) {
+            return;
+        }
+        if (isOnCooldown(player)) {
             return;
         }
         List<Entity> entities = armorStand.getNearbyEntities(0.5, 1, 0.5);
@@ -86,6 +95,8 @@ public class TPPointEvent implements Listener {
 
         String color = armorStand.getCustomName().substring(0, 2);
 
+        setCooldown(player);
+
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 1));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 100));
 
@@ -102,6 +113,7 @@ public class TPPointEvent implements Listener {
         } else {
             player.teleport(tpLocation);
         }
+
     }
 
     private void playSound(Player player, String soundName, Location tpLocation) {
@@ -112,5 +124,17 @@ public class TPPointEvent implements Listener {
                 player.playSound(player.getLocation(), soundName, SoundCategory.MASTER, 1, 1);
             }
         }.runTaskLater(DK_TeleportPoints_Plugin.getInstance(), 40);
+    }
+    private boolean isOnCooldown(Player player) {
+        if (!cooldowns.containsKey(player)) {
+            return false;
+        }
+        long lastUsed = cooldowns.get(player);
+        long currentTime = System.currentTimeMillis();
+        return (currentTime - lastUsed) < cooldownTime;
+    }
+
+    private void setCooldown(Player player) {
+        cooldowns.put(player, System.currentTimeMillis());
     }
 }
